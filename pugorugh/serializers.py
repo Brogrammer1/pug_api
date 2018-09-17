@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
-
 from rest_framework import serializers
+
 from . import models
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -15,18 +16,16 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     class Meta:
-        fields=(
+        fields = (
             'username',
             'password'
         )
         model = get_user_model()
 
 
-
 class DogSerializer(serializers.ModelSerializer):
-
     class Meta:
-        fields =(
+        fields = (
             'id',
             'name',
             'image_filename',
@@ -39,22 +38,23 @@ class DogSerializer(serializers.ModelSerializer):
         model = models.Dog
 
 
-
-class UserPrefSerializer(serializers.ModelSerializer):
-
-    def update(self, instance, validated_data):
-        instance.age = validated_data.get('age', instance.age)
-        instance.gender = validated_data.get('gender', instance.gender)
-        instance.size = validated_data.get('size', instance.size)
-        instance.save()
-        return instance
-
+class Userdog(serializers.ModelSerializer):
     class Meta:
-        extra_kwargs = {
-            'user' : {'write_only': True}
-        }
         fields = (
             'user',
+            'dog',
+            'status',
+
+        )
+        model = models.UserDog
+
+
+class UserPrefSerializer(serializers.ModelSerializer):
+    class Meta:
+        extra_kwargs = {
+            'user': {'write_only': True}
+        }
+        fields = (
             'age',
             'gender',
             'size',
